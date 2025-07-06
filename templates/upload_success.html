@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Thành Công - SpotifySecure</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/spotify.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="spotify-logo">
+                    <a href="{{ url_for('index') }}">
+                        <i class="fab fa-spotify"></i>
+                        SpotifySecure
+                    </a>
+                </h1>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{ url_for('index') }}" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('upload_file') }}" class="nav-link">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            Upload
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('download_file') }}" class="nav-link">
+                            <i class="fas fa-cloud-download-alt"></i>
+                            Download
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="security-info">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="security-text">
+                        <div class="security-title">Secure Transfer</div>
+                        <div class="security-desc">RSA + AES-GCM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="main-header">
+                <h2><i class="fas fa-check-circle" style="color: var(--spotify-green);"></i> Upload Thành Công!</h2>
+                <p>File của bạn đã được mã hóa và upload an toàn lên Spotify cloud</p>
+            </div>
+
+            <!-- Success Info -->
+            <div class="success-container">
+                <div class="success-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-file-audio"></i> Thông Tin File</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row">
+                            <label>Tên File:</label>
+                            <span>{{ original_filename }}</span>
+                        </div>
+                        <div class="info-row">
+                            <label>File ID:</label>
+                            <div class="copy-field">
+                                <input type="text" id="fileId" value="{{ file_id }}" readonly>
+                                <button onclick="copyToClipboard('fileId')" title="Copy File ID">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-card session-key-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-key"></i> Session Key - QUAN TRỌNG!</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>LƯU LẠI Session Key này!</strong><br>
+                            Bạn cần session key để download và giải mã file. Session key chỉ hiển thị một lần duy nhất.
+                        </div>
+
+                        <div class="session-key-display">
+                            <label>Session Key (HEX):</label>
+                            <div class="copy-field">
+                                <input type="text" id="sessionKey" value="{{ session_key }}" readonly>
+                                <button onclick="copyToClipboard('sessionKey')" title="Copy Session Key">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="key-instructions">
+                            <h4>Hướng dẫn sử dụng Session Key:</h4>
+                            <ol>
+                                <li>Copy session key bằng cách nhấn nút <i class="fas fa-copy"></i></li>
+                                <li>Lưu session key vào nơi an toàn (notepad, file text...)</li>
+                                <li>Khi download, dán session key vào ô "Session Key"</li>
+                                <li>Session key phải đúng 100% để giải mã được file</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Protocol Summary -->
+            <div class="protocol-summary">
+                <div class="process-steps">
+                    <div class="step completed">
+                        <i class="fas fa-check"></i>
+                        <span>Handshake: "Hello!" → "Ready!" với Spotify cloud</span>
+                    </div>
+                    <div class="step completed">
+                        <i class="fas fa-check"></i>
+                        <span>Xác thực: RSA signature metadata + SessionKey encryption</span>
+                    </div>
+                    <div class="step completed">
+                        <i class="fas fa-check"></i>
+                        <span>Mã hóa: AES-GCM với tag xác thực 16-byte</span>
+                    </div>
+                    <div class="step completed">
+                        <i class="fas fa-check"></i>
+                        <span>Upload: Gói tin {nonce, cipher, tag, hash, sig}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ url_for('download_file') }}" class="btn btn-spotify">
+                    <i class="fas fa-download"></i>
+                    Download File Ngay
+                </a>
+                <a href="{{ url_for('upload_file') }}" class="btn btn-secondary">
+                    <i class="fas fa-upload"></i>
+                    Upload File Khác
+                </a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    Về Trang Chủ
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Player -->
+    <div class="bottom-player">
+        <div class="player-left">
+            <div class="current-track">
+                <i class="fas fa-check-circle" style="color: var(--spotify-green);"></i>
+                <div class="track-info">
+                    <div class="track-title">Upload Completed</div>
+                    <div class="track-artist">File encrypted and stored securely</div>
+                </div>
+            </div>
+        </div>
+        <div class="player-center">
+            <div class="player-controls">
+                <button class="control-btn" title="File Secured">
+                    <i class="fas fa-shield-alt"></i>
+                </button>
+                <button class="control-btn" title="Encrypted">
+                    <i class="fas fa-lock"></i>
+                </button>
+                <button class="control-btn" title="Ready for Download">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+        </div>
+        <div class="player-right">
+            <div class="connection-status">
+                <i class="fas fa-check"></i>
+                <span>Upload Success</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            element.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(element.value).then(() => {
+                // Visual feedback
+                const button = element.nextElementSibling;
+                const icon = button.querySelector('i');
+                icon.className = 'fas fa-check';
+                button.style.color = 'var(--spotify-green)';
+
+                // Show toast
+                showToast('Đã copy vào clipboard!');
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    icon.className = 'fas fa-copy';
+                    button.style.color = '';
+                }, 2000);
+            }).catch(() => {
+                showToast('Lỗi khi copy. Hãy copy thủ công.', 'error');
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}"></i>
+                ${message}
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Auto-focus on session key for easy selection
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Upload success page loaded');
+            console.log('File ID:', '{{ file_id }}');
+            console.log('Session Key available for copy');
+        });
+    </script>
+</body>
+
+</html>
