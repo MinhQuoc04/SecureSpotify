@@ -1,4 +1,4 @@
-# SecureSpotify
+  # SecureSpotify
 
 SecureSpotify là một ứng dụng web cho phép người dùng upload, mã hóa, lưu trữ và tải về các file (âm thanh, tài liệu, hình ảnh, video...) một cách an toàn, sử dụng các kỹ thuật mật mã hiện đại như RSA, AES-GCM, xác thực chữ ký số và kiểm tra toàn vẹn dữ liệu. Ứng dụng mô phỏng quy trình truyền file bảo mật qua socket, phù hợp cho mục đích học tập và trình diễn các chủ đề về bảo mật thông tin.
 
@@ -14,6 +14,23 @@ SecureSpotify là một ứng dụng web cho phép người dùng upload, mã h�
   Hỗ trợ tùy chọn giả lập việc sửa đổi dữ liệu để kiểm tra khả năng phát hiện tấn công.
 - **Giao diện web đơn giản, dễ sử dụng:**  
   Sử dụng Flask, HTML, CSS, JS.
+
+## 🖼️ Minh Họa Giao Diện & Sơ Đồ Kiến Trúc
+
+### Sơ đồ luồng hoạt động chi tiết
+*Sơ đồ mô tả chính xác luồng mã hóa và trao đổi dữ liệu giữa Người gửi, Server và Người nhận.*
+
+![image](https://github.com/user-attachments/assets/34e4c856-170b-4ddc-a971-52255aecbdf0)
+
+
+
+
+### Giao diện người dùng
+*Giao diện tối giản cho phép ứng viên nhập thông tin và tải CV lên một cách nhanh chóng.*
+
+![image](https://github.com/user-attachments/assets/49aeb7d3-5445-4c7f-90ca-bc40fd752d3f)
+
+---
 
 ## Cấu trúc thư mục
 
